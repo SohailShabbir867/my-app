@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Real-time weather application with forecasts and detailed insights">
+    <title>WeatherApp - Real-time Weather Information</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header Section -->
+        <header>
+            <div class="logo">
+                <i class="fas fa-cloud-sun"></i>
+                <h1>WeatherApp</h1>
+            </div>
+            <div class="toggle-container">
+                <button id="unit-toggle" class="toggle-btn" title="Toggle Temperature Unit">
+                    <span>°C</span>/<span>°F</span>
+                </button>
+                <button id="theme-toggle" class="toggle-btn" title="Toggle Dark/Light Mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- Search Section -->
+        <section class="search-section">
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Enter city name..." autocomplete="off">
+                <button id="search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button id="location-btn" title="Get Current Location">
+                    <i class="fas fa-location-crosshairs"></i>
+                </button>
+            </div>
+            <div class="recent-searches" id="recent-searches">
+                <!-- Recent searches will be added here dynamically -->
+            </div>
+        </section>
+
+        <!-- Main Weather Content -->
+        <main id="weather-container">
+            <!-- Loading State -->
+            <div id="loading-container" class="loading-container hidden">
+                <div class="loader"></div>
+                <p>Fetching weather data...</p>
+            </div>
+
+            <!-- Error State -->
+            <div id="error-container" class="error-container hidden">
+                <i class="fas fa-exclamation-circle"></i>
+                <h2>Oops!</h2>
+                <p id="error-message">Unable to fetch weather data. Please try again.</p>
+                <button id="retry-btn" class="btn">Try Again</button>
+            </div>
+
+            <!-- Weather Data -->
+            <div id="weather-content" class="weather-content hidden">
+                <!-- Current Weather -->
+                <section class="current-weather-section">
+                    <div class="current-weather-card">
+                        <div class="weather-header">
+                            <div class="location-info">
+                                <h2 id="city-name">City Name</h2>
+                                <p id="country-name">Country</p>
+                                <p id="date-time">Wednesday, 16:30</p>
+                            </div>
+                            <div class="weather-icon">
+                                <img id="weather-icon" src="" alt="Weather condition">
+                            </div>
+                        </div>
+                        <div class="weather-body">
+                            <div class="temperature">
+                                <h1 id="temperature">--°</h1>
+                                <p id="feels-like">Feels like: --°</p>
+                            </div>
+                            <div class="weather-details">
+                                <p id="weather-description">Weather Description</p>
+                                <div class="min-max-temp">
+                                    <span id="min-temp">Min: --°</span>
+                                    <span id="max-temp">Max: --°</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Weather Highlights -->
+                <section class="highlights-section">
+                    <h2 class="section-title">Today's Highlights</h2>
+                    <div class="highlights-grid">
+                        <!-- Wind Status -->
+                        <div class="highlight-card">
+                            <h3>Wind Status</h3>
+                            <div class="highlight-content">
+                                <div class="highlight-value">
+                                    <span id="wind-speed">--</span>
+                                    <span class="unit">km/h</span>
+                                </div>
+                                <div class="wind-direction">
+                                    <i id="wind-direction-arrow" class="fas fa-location-arrow"></i>
+                                    <span id="wind-direction">--</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Humidity -->
+                        <div class="highlight-card">
+                            <h3>Humidity</h3>
+                            <div class="highlight-content">
+                                <div class="highlight-value">
+                                    <span id="humidity-value">--</span>
+                                    <span class="unit">%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div id="humidity-progress" class="progress"></div>
+                                </div>
+                                <div class="progress-labels">
+                                    <span>0</span>
+                                    <span>50</span>
+                                    <span>100</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Visibility -->
+                        <div class="highlight-card">
+                            <h3>Visibility</h3>
+                            <div class="highlight-content">
+                                <div class="highlight-value">
+                                    <span id="visibility-value">--</span>
+                                    <span class="unit">km</span>
+                                </div>
+                                <p id="visibility-status" class="status-text">--</p>
+                            </div>
+                        </div>
+
+                        <!-- Air Pressure -->
+                        <div class="highlight-card">
+                            <h3>Air Pressure</h3>
+                            <div class="highlight-content">
+                                <div class="highlight-value">
+                                    <span id="pressure-value">--</span>
+                                    <span class="unit">hPa</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sunrise & Sunset -->
+                        <div class="highlight-card">
+                            <h3>Sunrise & Sunset</h3>
+                            <div class="highlight-content sun-times">
+                                <div class="sun-time">
+                                    <i class="fas fa-sunrise"></i>
+                                    <span id="sunrise-time">--:--</span>
+                                </div>
+                                <div class="sun-time">
+                                    <i class="fas fa-sunset"></i>
+                                    <span id="sunset-time">--:--</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- UV Index -->
+                        <div class="highlight-card">
+                            <h3>UV Index</h3>
+                            <div class="highlight-content">
+                                <div class="highlight-value">
+                                    <span id="uv-index">--</span>
+                                </div>
+                                <p id="uv-level" class="status-text">--</p>
+                                <div class="uv-progress">
+                                    <div class="uv-scale">
+                                        <div class="uv-level uv-low"></div>
+                                        <div class="uv-level uv-moderate"></div>
+                                        <div class="uv-level uv-high"></div>
+                                        <div class="uv-level uv-very-high"></div>
+                                        <div class="uv-level uv-extreme"></div>
+                                    </div>
+                                    <div id="uv-indicator" class="uv-indicator"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5-Day Forecast -->
+                <section class="forecast-section">
+                    <h2 class="section-title">5-Day Forecast</h2>
+                    <div class="forecast-container" id="forecast-container">
+                        <!-- Forecast cards will be generated dynamically with JavaScript -->
+                    </div>
+                </section>
+
+                <!-- Hourly Forecast -->
+                <section class="hourly-forecast-section">
+                    <h2 class="section-title">Hourly Forecast</h2>
+                    <div class="hourly-scroll-container">
+                        <div class="hourly-forecast" id="hourly-forecast">
+                            <!-- Hourly forecast items will be generated dynamically -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Air Quality Section (Optional) -->
+                <section class="air-quality-section">
+                    <h2 class="section-title">Air Quality</h2>
+                    <div class="air-quality-card">
+                        <div class="aqi-value">
+                            <span id="aqi-number">--</span>
+                            <span id="aqi-text" class="aqi-text">--</span>
+                        </div>
+                        <div class="pollutants-grid">
+                            <div class="pollutant">
+                                <span class="pollutant-name">CO</span>
+                                <span id="co-value" class="pollutant-value">--</span>
+                            </div>
+                            <div class="pollutant">
+                                <span class="pollutant-name">NO<sub>2</sub></span>
+                                <span id="no2-value" class="pollutant-value">--</span>
+                            </div>
+                            <div class="pollutant">
+                                <span class="pollutant-name">O<sub>3</sub></span>
+                                <span id="o3-value" class="pollutant-value">--</span>
+                            </div>
+                            <div class="pollutant">
+                                <span class="pollutant-name">PM2.5</span>
+                                <span id="pm25-value" class="pollutant-value">--</span>
+                            </div>
+                            <div class="pollutant">
+                                <span class="pollutant-name">PM10</span>
+                                <span id="pm10-value" class="pollutant-value">--</span>
+                            </div>
+                            <div class="pollutant">
+                                <span class="pollutant-name">SO<sub>2</sub></span>
+                                <span id="so2-value" class="pollutant-value">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer>
+            <p>
+                Powered by <a href="https://openweathermap.org/" target="_blank" rel="noopener noreferrer">OpenWeather API</a>
+            </p>
+            <p class="copyright">
+                © <span id="current-year">2025</span> WeatherApp. All rights reserved.
+            </p>
+        </footer>
+    </div>
+
+    <!-- Templates for JavaScript -->
+    <template id="forecast-day-template">
+        <div class="forecast-card">
+            <h3 class="forecast-day">Day</h3>
+            <div class="forecast-icon">
+                <img src="" alt="Weather condition">
+            </div>
+            <div class="forecast-temp">
+                <span class="max-temp">--°</span>
+                <span class="min-temp">--°</span>
+            </div>
+            <p class="forecast-description">Description</p>
+        </div>
+    </template>
+
+    <template id="hourly-item-template">
+        <div class="hourly-item">
+            <p class="hourly-time">--:--</p>
+            <img class="hourly-icon" src="" alt="Weather condition">
+            <p class="hourly-temp">--°</p>
+        </div>
+    </template>
+
+    <template id="recent-search-template">
+        <button class="recent-search-item">
+            <i class="fas fa-history"></i>
+            <span class="city-name">City Name</span>
+        </button>
+    </template>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
